@@ -1,0 +1,6 @@
+.env
+/composer.lock
+/nbproject
+/.phpstorm.meta.php
+/_ide_helper.php
+/.idea
