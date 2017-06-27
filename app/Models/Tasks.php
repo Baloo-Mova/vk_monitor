@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\TasksType;
+
 
 /**
  * App\Models\Tasks
@@ -16,6 +16,8 @@ use App\Models\TasksType;
  * @property int $notification_mode
  * @property int $telegram_id
  * @property string $email
+ * @property int $reserved
+ * @property int $checked
  */
 class Tasks extends Model
 {
@@ -31,6 +33,8 @@ class Tasks extends Model
         'notification_mode',
         'telegram_id',
         'email',
+        'reserved',
+        'checked',
         'created_at',
         'updated_at'
     ];

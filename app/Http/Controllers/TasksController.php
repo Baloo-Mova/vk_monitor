@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Tasks;
+use GuzzleHttp\Client;
+use GuzzleHttp\Cookie\CookieJar;
+use GuzzleHttp\Cookie\SetCookie;
+use App\Models\Proxies;
 
 class TasksController extends Controller
 {
@@ -43,17 +47,17 @@ class TasksController extends Controller
 
     public function getTask(Request $request)
     {
-       // try{
+        // try{
 
 
         $limit = 100;
 
-        if(isset($request["offset"])){
+        if (isset($request["offset"])) {
             $offset = $request["offset"];
         }
-        if(isset($request["limit"])) {
+        if (isset($request["limit"])) {
             $req_limit = intval($request["limit"]);
-            if ($req_limit <= 1000 && $req_limit>=0) {
+            if ($req_limit <= 1000 && $req_limit >= 0) {
                 if (intval($limit)) $limit = $request["limit"];
             }
         }
@@ -70,47 +74,47 @@ class TasksController extends Controller
 
         $tasks_list = Tasks::where($arr_filter)->paginate($limit);
 
-        if($tasks_list->count()==0){
+        if ($tasks_list->count() == 0) {
 
-        return ['response' => null];
+            return ['response' => null];
         }
         $arr_result = [];
         foreach ($tasks_list as $task) {
             //dd($task->getOriginal());
             $arr_result[] = $task->getOriginal();
         }
-        return ['response'=>'OK','tasks' => $arr_result];
+        return ['response' => 'OK', 'tasks' => $arr_result];
         //}catch (\Exception $ex){ return ['response' =>null];}
     }
 
     public function editTask(Request $request)
     {
-      //  try {
-            $json = $request->getContent();
+        //  try {
+        $json = $request->getContent();
 
-            $json = json_decode($json, true);
+        $json = json_decode($json, true);
 
-            if (isset($json["tasks"])) {
-                for ($i = 0; $i < count($json["tasks"]); $i++) {
+        if (isset($json["tasks"])) {
+            for ($i = 0; $i < count($json["tasks"]); $i++) {
 
 
-                    if (isset($json["tasks"][$i]["id"])) {
-                        if (isset($json["tasks"][$i]['date_post_publication'])) {
+                if (isset($json["tasks"][$i]["id"])) {
+                    if (isset($json["tasks"][$i]['date_post_publication'])) {
 
-                            $json["tasks"][$i]['date_post_publication'] = Carbon::createFromTimestamp(intval($json["tasks"][$i]['date_post_publication'] / 1000), config('app.timezone'))->toDateTimeString();
-                        }
-                        Tasks::where(['id' => $json["tasks"][$i]["id"]])->update($json["tasks"][$i]);
+                        $json["tasks"][$i]['date_post_publication'] = Carbon::createFromTimestamp(intval($json["tasks"][$i]['date_post_publication'] / 1000), config('app.timezone'))->toDateTimeString();
                     }
-
+                    Tasks::where(['id' => $json["tasks"][$i]["id"]])->update($json["tasks"][$i]);
                 }
-                //dd($json["tasks"]);
-                //Tasks::insert($json["tasks"]);
 
             }
-            return ['response' => 'OK'];
-      //  } catch (\Exception $ex) {
-       //     return ['response' => $ex->getMessage()];
-       // }
+            //dd($json["tasks"]);
+            //Tasks::insert($json["tasks"]);
+
+        }
+        return ['response' => 'OK'];
+        //  } catch (\Exception $ex) {
+        //     return ['response' => $ex->getMessage()];
+        // }
     }
 
     public function removeTask(Request $request)
