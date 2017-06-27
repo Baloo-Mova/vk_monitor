@@ -68,6 +68,7 @@ class VKMonitor extends Command
     }
     public function handle()
     {
+
         try {
             //
             $this->proxy = Proxies::where(['valid' => 1])->first();//inRandomOrder()->first();
@@ -93,21 +94,17 @@ class VKMonitor extends Command
                 });
                 $tasks = $this->content['tasks'];
                 //dd($tasks->count());
-                sleep(3);
+                sleep(1);
 
                 // print_r($tasks);
                 if (isset($tasks)) {
 
                     foreach ($tasks as $task) {
                         $arr_vk_link = parse_url($task->vk_link);
-                        $arr_vk_link["path"] = str_replace("/", "", $arr_vk_link["path"]);
-                        $request = $this->client->request("GET", "https://api.vk.com/method/groups.getById?access_token=" . $this->api_service_token . "&group_ids=" . $arr_vk_link["path"] . "&v=5.65", []);
-                        $data = $request->getBody()->getContents();
-                        //$json = $request->getContent();
 
-                        $json = json_decode($data, true);
-                        $json = $json["response"][0];
-                        $id_group = $json["id"];
+                        $arr_vk_link["path"] = str_replace("/", "", $arr_vk_link["path"]);
+                        $id_group = preg_replace('/(wall\-)|(\_\d*)/', '', $arr_vk_link["path"] );
+                        //dd($id_group);
 
                         $request = $this->client->request("GET", "https://api.vk.com/method/wall.get?access_token=" . $this->api_service_token . "&owner_id=-" . $id_group . "&count=" . (7) . "&filter=owner&extended=1&v=5.65", []);
                         $data = $request->getBody()->getContents();
@@ -120,7 +117,7 @@ class VKMonitor extends Command
                             $checked = $this->findWords($json["items"], $task->find_query);
                             if ($checked == null) {
 
-                                $message = "Пост в группе " . $task->vk_link . " не опубликован";
+                                $message = "В паблике https://vk.com/club".$id_group. " не обнаружен пост с ключевыми словами: ".$task->find_query.". Плановое время выхода поста - ". $task->date_post_publication;
                                 if ($task->checked == 0) {
                                     $task->update([
                                         'checked' => $task->checked + 1,
@@ -175,7 +172,7 @@ class VKMonitor extends Command
 
 
                         }
-                        //dd("stop");
+                       // dd("stop");
                     }
                 }
 
