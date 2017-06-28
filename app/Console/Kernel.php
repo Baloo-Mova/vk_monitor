@@ -7,6 +7,8 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 use App\Console\Commands\VKMonitor;
 use App\Console\Commands\NotificationSender;
+use App\Console\Commands\Test;
+use App\Console\Commands\TelegramUpdates;
 
 
 
@@ -22,6 +24,7 @@ class Kernel extends ConsoleKernel
         //
         VKMonitor::class,
         NotificationSender::class,
+        Test::class,
     ];
 
     /**

@@ -8,6 +8,7 @@ use PHPMailer;
 
 use App\Models\Notifications;
 use App\Models\AccountsData;
+use App\Helpers\Emails;
 class NotificationSender extends Command
 {
     /**
@@ -55,9 +56,6 @@ class NotificationSender extends Command
 
                     $collection = Notifications::where(['reserved' => 0, 'email_sended'=>0])->limit(10);   //для тестов
 
-
-
-
                     $notifications = $collection->get();
 
                     if ($notifications->count()==0) {
@@ -72,20 +70,25 @@ class NotificationSender extends Command
                     continue;
                 }
                 foreach ($notifications as $notification) {
-                    if($this->sendMessage(['from' => $from, 'to'=>[$notification->email],'message'=>['subject'=>'Уведомление от ВК монитора', 'body'=>$notification->message]])){
+                    $params = [
+                        'from' => $from,
+                        'to'=>[$notification->email],
+                        'message'=>[
+                            'subject'=>'Уведомление от ВК монитора',
+                            'body'=>$notification->message
+                        ]
+                    ];
+                    $mailSender = new Emails($params);
+                    if($mailSender->sendMessage()){
                         $notification->email_sended=1;
-                        $notification->reserved=0;
+                        $notification->reserved=1;
                         $notification->save();
                     }
                     else{
-                        //$from->valid =-1;
-                      //  $from->save();
-
                         $notification->reserved=0;
                         $notification->save();
                     }
 
-                    dd("stop");
                 }
             }
         }
@@ -98,15 +101,16 @@ class NotificationSender extends Command
     {
 
         $mail = new PHPMailer;
-        $mail->SMTPDebug = 3;                               // Enable verbose debug output
+
         $mail->isSMTP();                                      // Set mailer to use SMTP
-        $mail->Host = $arguments['from']->smtp_address;  // Specify main and backup SMTP servers
-        $mail->SMTPAuth = true;                               // Enable SMTP authentication
-        $mail->Username = $arguments['from']->login;                 // SMTP username
-        $mail->Password = $arguments['from']->password;                           // SMTP password
+        $mail->Host       = $arguments['from']->smtp_address;                   // Specify main and backup SMTP servers 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;                               // Enable SMTP authentication
+        $mail->Username   = $arguments['from']->login;                // SMTP username $arguments['from']->login;
+        $mail->Password   = $arguments['from']->password;                        // SMTP password $arguments['from']->password;
         $mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
-        $mail->Port = $arguments['from']->smtp_port;                                    // TCP port to connect to
-        $mail->CharSet = 'UTF-8';
+        $mail->Port       = $arguments['from']->smtp_port;    // TCP port to connect to 465
+        $mail->CharSet    = "UTF-8";
+
         $mail->setFrom($arguments['from']->login);
 
         foreach ($arguments['to'] as $email) {
