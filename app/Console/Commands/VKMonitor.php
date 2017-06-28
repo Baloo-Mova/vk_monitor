@@ -188,7 +188,7 @@ class VKMonitor extends Command
 
 
                         }
-                        dd("stop");
+                        //dd("stop");
                     }
                 }
 
