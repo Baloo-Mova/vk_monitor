@@ -82,16 +82,22 @@ class VKMonitor extends Command
                 DB::transaction(function () {
                     $now = Carbon::now(config('app.timezone'))->addSeconds(-5);
                     print_r($now);
-                     $tasks = Tasks::where(['date_post_publication' => $now, 'reserved'=>0])
-                                    ->orWhere(['updated_at' => $now, 'reserved'=>0])->limit(1)->get();
-                    //$tasks = Tasks::where(['reserved' => 0])->limit(1)->get();                          //для тестов
+                    $collection = Tasks::where(['date_post_publication' => $now, 'reserved'=>0])
+                                    ->orWhere(['updated_at' => $now, 'reserved'=>0])->limit(1);
+                    // $collection = Tasks::where(['reserved' => 0])->limit(1);   //для тестов
+
+
+
+                     //$tasks = ->get();
+                    $tasks = $collection->get();
                     //dd($tasks->count());
                     if ($tasks->count()==0) {
                         return;
                     }
-
+                    $collection->update(['reserved' => 1]);
                     $this->content['tasks'] = $tasks;
                 });
+
                 $tasks = $this->content['tasks'];
                 //dd($tasks->count());
                 sleep(1);
@@ -117,21 +123,25 @@ class VKMonitor extends Command
                             $checked = $this->findWords($json["items"], $task->find_query);
                             if ($checked == null) {
 
-                                $message = "В паблике https://vk.com/club".$id_group. " не обнаружен пост с ключевыми словами: ".$task->find_query.". Плановое время выхода поста - ". $task->date_post_publication;
+                                $message = "В паблике https://vk.com/public".$id_group. " не обнаружен пост с ключевыми словами: ".$task->find_query.". Плановое время выхода поста - ". $task->date_post_publication;
                                 if ($task->checked == 0) {
-                                    $task->update([
+                                    Tasks::where(['id'=>$task->id])->update([
                                         'checked' => $task->checked + 1,
                                         'updated_at' => Carbon::now(config('app.timezone'))->addMinutes(1)->addSeconds(5),
+                                        'reserved' => 0,
                                     ]);
+
                                 continue;
                                 } else {
 
                                     if ($task->checked != 7) {
 
-                                        $task->update([
+                                        Tasks::where(['id'=>$task->id])->update([
                                             'checked' => $task->checked + 1,
+                                            'reserved' => 0,
                                             'updated_at' => Carbon::now(config('app.timezone'))->addMinutes(5)->addSeconds(5),
                                         ]);
+
                                     }else{
                                         $task->delete();
 
@@ -140,14 +150,16 @@ class VKMonitor extends Command
                                 }
 
                             } else {
-                                $message = "Пост " . $task->vk_link . "?w=wall-" . $id_group . "_" . $checked . " в группе " . $task->vk_link . " опубликован";
-
+                                $message = "Пост " . "https://vk.com/public".$id_group."?w=wall-" . $id_group . "_" . $checked . " в паблике https://vk.com/club".$id_group. " опубликован";
+                                $task->delete();
                             }
                             if ($task->notification_mode == 2) {
 
                                 Notifications::insert([
                                     'task_id' => $task->id,
                                     'message' => $message,
+                                    'email' => $task->email,
+                                    'telegram_id'=>$task->telegram_id,
                                     'created_at' => Carbon::now(config('app.timezone')),
                                 ]);
                             }
@@ -157,6 +169,8 @@ class VKMonitor extends Command
                                 Notifications::insert([
                                     'task_id' => $task->id,
                                     'message' => $message,
+                                    'email' => $task->email,
+                                    'telegram_id'=>$task->telegram_id,
                                     'created_at' => Carbon::now(config('app.timezone')),
                                 ]);
                             }
@@ -165,6 +179,8 @@ class VKMonitor extends Command
                                 Notifications::insert([
                                     'task_id' => $task->id,
                                     'message' => $message,
+                                    'email' => $task->email,
+                                    'telegram_id'=>$task->telegram_id,
                                     'created_at' => Carbon::now(config('app.timezone')),
                                 ]);
 
@@ -172,14 +188,17 @@ class VKMonitor extends Command
 
 
                         }
-                       // dd("stop");
+                        dd("stop");
                     }
                 }
 
 
             }
         }catch(\Exception $ex){
-            dd($ex->getLine()."    ".$ex->getMessage());
+            Tasks::whereIn('id', array_column($tasks->toArray(), 'id'))->update([
+                'reserved' => 0
+            ]);
+            echo("\n".$ex->getLine()."    ".$ex->getMessage());
         }
     }
     public function findWords($jsonItems,$find_str)

@@ -6,6 +6,8 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 use App\Console\Commands\VKMonitor;
+use App\Console\Commands\NotificationSender;
+
 
 
 
@@ -19,6 +21,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         //
         VKMonitor::class,
+        NotificationSender::class,
     ];
 
     /**
