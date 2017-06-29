@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Helpers\Emails;
+use App\Models\AccountsData;
 use Illuminate\Console\Command;
 use App\Helpers\Telegram;
 
@@ -38,8 +40,17 @@ class Test extends Command
      */
     public function handle()
     {
-        $t = new Telegram();
-        //$t->sendMessage('id', 'test');
-        $t->getUpdates();
+        $from = AccountsData::where(['valid' => 1])->first(); 
+        $params = [
+            'from'    => $from,
+            'to'      => ['sergious91@gmail.com'],
+            'message' => [
+                'subject' => 'Уведомление от ВК монитора',
+                'body'    => "test"
+            ]
+        ];
+
+        $mailSender  = new Emails($params);
+        $emailSended = $mailSender->sendMessage();
     }
 }
