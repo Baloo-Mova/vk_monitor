@@ -27,8 +27,8 @@ class TasksController extends Controller
             $json   = json_decode($json, true);
             if (count($json) > 0) {
                 for ($i = 0; $i < count($json); $i++) {
+                    $data = $json[$i];
                     try {
-                        $data                          = $json[$i];
                         $model                         = new Tasks();
                         $data['date_post_publication'] = Carbon::createFromTimestamp($data['date_post_publication'],
                             config('app.timezone'))->toDateTimeString();
