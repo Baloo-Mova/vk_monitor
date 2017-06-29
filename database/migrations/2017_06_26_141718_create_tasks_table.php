@@ -25,12 +25,12 @@ class CreateTasksTable extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->usigned()->index();
-            $table->string('vk_link')->nullable();
-            $table->string('find_query')->nullable();
-            $table->timestamp('date_post_publication')->nullable();
+            $table->string('vk_link');
+            $table->string('find_query');
+            $table->timestamp('date_post_publication');
             $table->tinyInteger('notification_mode')->unsigned()->default(2);
             $table->integer('telegram_id')->nullable();
-            $table->string('email')->nullable();
+            $table->string('email');
             $table->timestamps();
         });
     }

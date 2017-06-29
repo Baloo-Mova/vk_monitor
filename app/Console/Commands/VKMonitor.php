@@ -191,7 +191,7 @@ class VKMonitor extends Command
                             }
                         }
                     } else {
-                        $message = "Пост " . "https://vk.com/public" . $id_group . "?w=wall-" . $id_group . "_" . $checked . " в паблике https://vk.com/club" . $id_group . " опубликован в" . Carbon::now(config('app.timezone'));
+                        $message = "Пост " . "https://vk.com/public" . $id_group . "?w=wall-" . $id_group . "_" . $checked . " в паблике https://vk.com/club" . $id_group . " опубликован в " . Carbon::now(config('app.timezone'));
                         $tasks->delete();
                     }
                     if ($tasks->notification_mode == 2) {

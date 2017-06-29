@@ -49,7 +49,6 @@ class Telegram
                     return true;
                 }
             } catch (\Exception $ex) {
-                dd($ex->getMessage());
                 return false;
             }
         } else {
