@@ -49,7 +49,7 @@ class NotificationSender extends Command
         //
         try {
             while (true) {
-                $from = AccountsData::where(['valid' => 1, 'type' => 0])->first();
+                $from = AccountsData::where(['valid' => 1])->first();
                 if (!isset($from)) {
                     sleep(10);
                     continue;
@@ -88,7 +88,7 @@ class NotificationSender extends Command
                     ];
                     $mailSender = new Emails($params);
                     $emailSended = $mailSender->sendMessage();
-
+                    echo "send email".PHP_EOL;
                 } else {
                     $emailSended = true;
                 }
@@ -97,6 +97,7 @@ class NotificationSender extends Command
                 if (isset($notifications->telegram_id)) {
                     $tele = new Telegram();
                     $telegramSended = $tele->sendMessage($notifications->telegram_id, $notifications->message);
+                    echo "send telegram".PHP_EOL;
                 } else {
                     $telegramSended = true;
                 }

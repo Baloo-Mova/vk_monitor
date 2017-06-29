@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TelegramAccounts extends Model
 {
-    public $timestamps = true;
+    public $timestamps = false;
     public $table = "telegram_accounts";
 
     public $fillable = [

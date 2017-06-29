@@ -45,11 +45,8 @@ class Emails
 
 
         if(!$this->mail->send()) {
-            echo "\n Message could not be sent.";
-            echo "\n Mailer Error: " . $this->mail->ErrorInfo;
             return false;
         } else {
-            echo "\n Message has been sent";
             return true;
         }
     }

@@ -21,10 +21,10 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
         VKMonitor::class,
         NotificationSender::class,
         Test::class,
+        TelegramUpdates::class
     ];
 
     /**

@@ -42,7 +42,7 @@ class TelegramUpdates extends Command
             $telegram = new Telegram();
             while(true){
                 $telegram->getUpdates();
-                sleep(60);
+                sleep(3);
             }
         }catch(\Exception $ex){
             return $ex;
