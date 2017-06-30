@@ -79,10 +79,10 @@ class Telegram
                         $teleUser->chat_id = $item->message->chat->id;
                         $teleUser->save();
                         $this->client->request("GET",
-                            "https://api.telegram.org/bot" . $this->bot->bot_key . "/sendMessage?chat_id=" . $item->message->chat->id . "&text=Вы успешно присоеденились к рассылке");
+                            "https://api.telegram.org/bot" . $this->bot->bot_key . "/sendMessage?chat_id=" . $item->message->chat->id . "&text=Вы успешно присоеденились к рассылке ваш Telegram ID: " . $item->message->from->id);
                     } else {
                         $this->client->request("GET",
-                            "https://api.telegram.org/bot" . $this->bot->bot_key . "/sendMessage?chat_id=" . $item->message->chat->id . "&text=Хорошо, хорошо, рассылать будем...");
+                            "https://api.telegram.org/bot" . $this->bot->bot_key . "/sendMessage?chat_id=" . $item->message->chat->id . "&text=Хорошо, хорошо, рассылать будем... Ах да! Вот ваш Telegram ID: ".$item->message->from->id);
                     }
                     $this->bot->offset = $item->update_id + 1;
                 }

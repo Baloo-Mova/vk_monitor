@@ -40,7 +40,7 @@ class Test extends Command
      */
     public function handle()
     {
-        $from = AccountsData::where(['valid' => 1])->first(); 
+        $from = AccountsData::where(['valid' => 1])->first();
         $params = [
             'from'    => $from,
             'to'      => ['sergious91@gmail.com'],
