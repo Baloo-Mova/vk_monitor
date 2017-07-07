@@ -40,17 +40,7 @@ class Test extends Command
      */
     public function handle()
     {
-        $from = AccountsData::where(['valid' => 1])->first();
-        $params = [
-            'from'    => $from,
-            'to'      => ['sergious91@gmail.com'],
-            'message' => [
-                'subject' => 'Уведомление от ВК монитора',
-                'body'    => "test"
-            ]
-        ];
-
-        $mailSender  = new Emails($params);
-        $emailSended = $mailSender->sendMessage();
+        $tele = new Telegram();
+        $telegramSended = $tele->sendMessage("232275585", "В паблике https://vk.com/public144979798 не обнаружен пост с ключевыми словами: котэ. Плановое время выхода поста - 2017-06-30 09:18:00");
     }
 }

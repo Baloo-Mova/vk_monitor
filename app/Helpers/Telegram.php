@@ -48,7 +48,7 @@ class Telegram
                 if ($request) {
                     return true;
                 }
-            } catch (\Exception $ex) {
+            } catch (\Exception $ex) { 
                 return false;
             }
         } else {
@@ -89,7 +89,6 @@ class Telegram
                 $this->bot->save();
             }
         } catch (\Exception $ex) {
-            dd($ex->getMessage());
         }
     }
 }

@@ -147,7 +147,7 @@ class VKMonitor extends Command
                             'to'      => [config('app.adminEmail')],
                             'message' => [
                                 'subject' => 'Уведомление от ВК монитора',
-                                'body'    => "Ошибка в вк: ".$data
+                                'body'    => "Ошибка в вк: " . $data
                             ]
                         ];
                         $email  = new Emails($params);
@@ -179,7 +179,7 @@ class VKMonitor extends Command
                             ]);
                             continue;
                         } else {
-                            if ($tasks->checked != 7) {
+                            if ($tasks->checked < 7) {
                                 Tasks::where(['id' => $tasks->id])->update([
                                     'checked'           => $tasks->checked + 1,
                                     'post_checked_time' => Carbon::now(config('app.timezone'))->addMinutes(5)->addSeconds(5),
@@ -227,7 +227,7 @@ class VKMonitor extends Command
                     }
                 }
             } catch (\Exception $ex) {
-                echo $ex->getMessage()." ".$ex->getLine();
+                echo $ex->getMessage() . " " . $ex->getLine();
             }
         }
     }
