@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\LikeMonitor;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -24,7 +25,8 @@ class Kernel extends ConsoleKernel
         VKMonitor::class,
         NotificationSender::class,
         Test::class,
-        TelegramUpdates::class
+        TelegramUpdates::class,
+        LikeMonitor::class,
     ];
 
     /**

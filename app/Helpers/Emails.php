@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Helpers;
+
 use PHPMailer;
 
 class Emails
@@ -10,7 +11,7 @@ class Emails
 
     public function __construct($arguments)
     {
-        $this->mail = new PHPMailer;
+        $this->mail      = new PHPMailer;
         $this->arguments = $arguments;
     }
 
@@ -28,7 +29,7 @@ class Emails
         $this->mail->setFrom($this->arguments['from']->login);
 
         foreach ($this->arguments['to'] as $email) {
-            if (!empty(trim($email))) {
+            if ( ! empty(trim($email))) {
                 $this->mail->addAddress($email);     // Add a recipient
             }
         }
@@ -36,15 +37,13 @@ class Emails
 
         $this->mail->Subject = $this->arguments["message"]["subject"];
         $this->mail->Body    = $this->arguments["message"]["body"];
-        if(isset($this->arguments["message"]["altbody"])){
+        if (isset($this->arguments["message"]["altbody"])) {
             $this->mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
-        }
-        else{
-            $this->mail->AltBody    = $this->arguments["message"]["body"];
+        } else {
+            $this->mail->AltBody = $this->arguments["message"]["body"];
         }
 
-
-        if(!$this->mail->send()) {
+        if ( ! $this->mail->send()) {
             return false;
         } else {
             return true;

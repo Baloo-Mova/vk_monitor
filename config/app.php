@@ -4,6 +4,8 @@ return [
 
     'adminEmail' => 'sergious91@gmail.com',
 
+    'liker_api_url' => '',
+
     /*
     |--------------------------------------------------------------------------
     | Application Name

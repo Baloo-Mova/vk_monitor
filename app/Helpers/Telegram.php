@@ -48,7 +48,7 @@ class Telegram
                 if ($request) {
                     return true;
                 }
-            } catch (\Exception $ex) { 
+            } catch (\Exception $ex) {
                 return false;
             }
         } else {

@@ -40,7 +40,19 @@ class Test extends Command
      */
     public function handle()
     {
-        $tele = new Telegram();
-        $telegramSended = $tele->sendMessage("232275585", "В паблике https://vk.com/public144979798 не обнаружен пост с ключевыми словами: котэ. Плановое время выхода поста - 2017-06-30 09:18:00");
+        $from   = AccountsData::where(['valid' => 1])->first();
+        $params = [
+            'from'    => $from,
+            'to'      => ['sergious-91@mail.ru'],
+            'message' => [
+                'subject' => 'Уведомление от ВК монитора',
+                'body'    => "В паблике https://vk.com/public144979798 не обнаружен пост с ключевыми словами: котэ. Плановое время выхода поста - 2017-06-30 09:18:00"
+            ]
+        ];
+        $mail   = new Emails($params);
+        $mail->sendMessage();
+
+        //$tele = new Telegram();
+        //$telegramSended = $tele->sendMessage("232275585", "В паблике https://vk.com/public144979798 не обнаружен пост с ключевыми словами: котэ. Плановое время выхода поста - 2017-06-30 09:18:00");
     }
 }
