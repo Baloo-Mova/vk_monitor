@@ -132,7 +132,7 @@ class LikeTaskController extends Controller
         $json    = json_decode($json, true);
         $result  = [];
         $execute = false;
-
+        dd($result);
         try {
             $tasks = LikeTask::select();
             if (isset($json['ids'])) {
@@ -162,7 +162,7 @@ class LikeTaskController extends Controller
 
             return ['response' => "DELETED", 'result' => $result];
         } catch (\Exception $ex) {
-            return ['response' => 'ERROR', 'result' => ['message' => $ex->getMessage()]];
+            return ['response' => 'ERROR', 'result' => ['message' => $ex->getMessage()."  ".$ex->getLine()]];
         }
     }
 }

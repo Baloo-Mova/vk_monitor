@@ -238,7 +238,7 @@ class LikeMonitor extends Command
         foreach ($jsonItems as $item) {
             if ($item["post_type"] == "post") {
                 if (isset($item["text"])) {
-                    if (strpos($item["text"], $find_str) !== false) {
+                    if (stripos($item["text"], $find_str) !== false) {
                         return $item["id"];
                     }
                 }
