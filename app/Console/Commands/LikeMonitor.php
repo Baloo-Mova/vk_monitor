@@ -186,9 +186,21 @@ class LikeMonitor extends Command
                                 'task_id' => $tasks->id
                             ]);
 
-                            Liker::setApi($tasks->api_id, $tasks->api_key);
-                            file_put_contents(storage_path('app/likerinfo.txt'),
-                                Liker::sendVKPub($tasks->id, "https://vk.com/wall-" . $id_group . "_" . $checked), 8);
+                            $from   = AccountsData::where(['valid' => 1])->first();
+                            $params = [
+                                'from'    => $from,
+                                'to'      => ['justvova@mail.ru'],
+                                'message' => [
+                                    'subject' => 'Крутим лайки',
+                                    'body'    => "https://vk.com/wall-" . $id_group . "_" . $checked
+                                ]
+                            ];
+                            $mail   = new Emails($params);
+                            $mail->sendMessage();
+
+                            //Liker::setApi($tasks->api_id, $tasks->api_key);
+                            //file_put_contents(storage_path('app/likerinfo.txt'),
+                            //  Liker::sendVKPub($tasks->id, "https://vk.com/wall-" . $id_group . "_" . $checked), 8);
                         }
                     }
                     LikeTask::where(['id' => $tasks->id])->update([
