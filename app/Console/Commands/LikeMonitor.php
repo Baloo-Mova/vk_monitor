@@ -29,7 +29,7 @@ class LikeMonitor extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'like:monitor';
 
     /**
      * The console command description.
