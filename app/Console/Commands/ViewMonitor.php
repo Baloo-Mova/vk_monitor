@@ -162,9 +162,7 @@ class ViewMonitor extends Command
                 }
 
                 $tasks->views_number = $json[0]['views']['count'];
-
-dd($tasks->views_number);
-
+  
                 if ($tasks->post_checked_time == null) {
                     $tasks->post_checked_time = Carbon::now()->addMinutes(30);
                 } else {
