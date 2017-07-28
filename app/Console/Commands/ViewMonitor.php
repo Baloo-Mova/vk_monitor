@@ -109,7 +109,6 @@ class ViewMonitor extends Command
                         []);
 
                     $data = $request->getBody()->getContents();
-
                 } catch (\Exception $exception) {
                     $from = AccountsData::inRandomOrder()->first();
                     if (isset($from)) {
@@ -162,13 +161,12 @@ class ViewMonitor extends Command
                 }
 
                 $tasks->views_number = $json[0]['views']['count'];
-  
+
                 if ($tasks->post_checked_time == null) {
                     $tasks->post_checked_time = Carbon::now()->addMinutes(30);
                 } else {
                     $time = Carbon::parse($tasks->post_checked_time);
                     $diff = $time->diffInDays(Carbon::now());
-                    dd($diff);
                     switch ($diff) {
                         case 0 :
                             $tasks->post_checked_time = Carbon::now()->addMinutes(30);
@@ -202,12 +200,10 @@ class ViewMonitor extends Command
                             }
                             break;
                     }
-
-
-                    $tasks->reserved = 0;
-                    $tasks->save();
-
                 }
+
+                $tasks->reserved = 0;
+                $tasks->save();
             } catch (\Exception $ex) {
                 $this->content['tasks']->reserved = 0;
                 $this->content['tasks']->save();
