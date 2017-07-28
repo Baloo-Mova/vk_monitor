@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\LikeMonitor;
+use App\Console\Commands\ViewMonitor;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -10,9 +11,6 @@ use App\Console\Commands\VKMonitor;
 use App\Console\Commands\NotificationSender;
 use App\Console\Commands\Test;
 use App\Console\Commands\TelegramUpdates;
-
-
-
 
 class Kernel extends ConsoleKernel
 {
@@ -27,12 +25,14 @@ class Kernel extends ConsoleKernel
         Test::class,
         TelegramUpdates::class,
         LikeMonitor::class,
+        ViewMonitor::class,
     ];
 
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
+     *
      * @return void
      */
     protected function schedule(Schedule $schedule)
