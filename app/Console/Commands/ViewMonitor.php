@@ -94,6 +94,7 @@ class ViewMonitor extends Command
                 });
 
                 $tasks = $this->content['tasks'];
+
                 if ( ! isset($tasks)) {
                     sleep(1);
                     continue;
@@ -106,7 +107,9 @@ class ViewMonitor extends Command
                     $request = $this->client->request("GET",
                         "https://api.vk.com/method/wall.getById?access_token=" . $this->api_service_token . "&posts=" . $post_id . "&extended=0&v=5.65",
                         []);
-                    $data    = $request->getBody()->getContents();
+
+                    $data = $request->getBody()->getContents();
+                    var_dump($data);
                 } catch (\Exception $exception) {
                     $from = AccountsData::inRandomOrder()->first();
                     if (isset($from)) {
@@ -154,6 +157,7 @@ class ViewMonitor extends Command
                 $json    = json_decode($data, true)["response"];
 
                 if (count($json) == 0) {
+                    sleep(1);
                     continue;
                 }
 
@@ -199,6 +203,7 @@ class ViewMonitor extends Command
                     }
                     $tasks->reserved = 0;
                     $tasks->save();
+                    sleep(1);
                 }
             } catch (\Exception $ex) {
                 $this->content['tasks']->reserved = 0;
